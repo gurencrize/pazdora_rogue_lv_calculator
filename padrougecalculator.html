@@ -1,0 +1,424 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>特殊降臨レベル計算</title>
+</head>
+<body onKeyPress="Key_on(window.event.keyCode)">
+<p><h3>特殊降臨のレベル計算するやつ ver1.0</h3></p>
+<br>つくった人:crize(@koumyouguren)
+<br>2次配布は禁止です
+<table border="0"><tr><td>
+<form name="pad">
+	<p>
+		ダンジョン:<select name="dungeon">
+			<option value="zaerog">ゼローグ∞</option>
+			<option value="nordis">ノルディス</option>
+			<option value="volsung">ヴォルスーン</option>
+			<option value="gainaut">ガイノウト</option>
+			<option value="rush">特ラ</option>
+		</select>
+	</p>
+	<p>
+		潜在たまドラ:<select name="tamadora">
+			<option value="0">出現なし</option>
+			<option value="1">1F</option>
+			<option value="2">2F</option>
+			<option value="3">3F</option>
+			<option value="4">4F</option>
+			<option value="5">5F</option>
+			<option value="6">6F</option>
+		</select>
+	</p>
+	<p>
+		主属性:<select name="mainelement">
+			<option value="fire">火</option>
+			<option value="water">水</option>
+			<option value="wood">木</option>
+			<option value="right">光</option>
+			<option value="dark">闇</option>
+		</select>
+	</p>
+	<p>
+		コスト:<input type="text" name="cost" size="3" maxlength="3" value="">
+	</p>
+	<p>
+		経験値テーブル:<select name="maxexp">
+			<option value="100">100万</option>
+			<option value="150">150万</option>
+			<option value="200">200万</option>
+			<option value="300">300万</option>
+			<option value="350">350万</option>
+			<option value="400">400万</option>
+			<option value="500">500万</option>
+			<option value="600">600万</option>
+			<option value="800">800万</option>
+			<option value="1000">1000万</option>
+			<option value="1600">1600万</option>
+			<option value="3000">3000万</option>
+		</select>
+	</p>
+</form>
+	<p>
+		<input type="button" value="計算開始" onclick="st();">
+	</p>
+</td><td>
+取得経験値量
+<form name="highorlow">
+	1F
+		<input id="F2" type="radio" name="2F" value="high"> 最高
+		<input type="radio" name="2F" value="low" checked> 最低<br>
+	2F
+		<input id="F3" type="radio" name="3F" value="high"> 最高
+		<input type="radio" name="3F" value="low" checked> 最低<br>
+	
+	3F
+		<input id="F4" type="radio" name="4F" value="high"> 最高
+		<input type="radio" name="4F" value="low" checked> 最低<br>
+	
+	4F
+		<input id="F5" type="radio" name="5F" value="high"> 最高
+		<input type="radio" name="5F" value="low" checked> 最低<br>
+	
+	5F
+		<input id="F6" type="radio" name="6F" value="high"> 最高
+		<input type="radio" name="6F" value="low" checked> 最低<br>
+	
+	6F
+		<input id="F7" type="radio" name="7F" value="high"> 最高
+		<input type="radio" name="7F" value="low" checked> 最低<br>
+	
+	7F
+		<input id="F8" type="radio" name="8F" value="high"> 最高
+		<input type="radio" name="8F" value="low" checked> 最低<br>
+	
+	8F
+		<input id="F9" type="radio" name="9F" value="high"> 最高
+		<input type="radio" name="9F" value="low" checked> 最低<br>
+	
+	9F
+		<input id="F10" type="radio" name="10F" value="high"> 最高
+		<input type="radio" name="10F" value="low" checked> 最低<br>
+	</p>
+</form>
+</td></tr></table>
+<table id="kekka" border=0> <tr><td></td><td></td></tr></table>
+<script>
+var st;
+var elem = document.getElementById("kekka");
+function st(){
+if (!(document.pad.cost.value)){
+alert('コストを入れて下さい');
+nasi();
+}//if
+//計算開始ボタンを押した時うごくやつ
+//モンスターの情報を変数に入力
+var cost=document.pad.cost.value;
+var mainelement=document.pad.mainelement.selectedIndex;
+var explv=document.pad.maxexp.selectedIndex;
+//ダンジョン情報の処理
+var tamadora=document.pad.tamadora.selectedIndex;
+ switch (document.pad.dungeon.selectedIndex){
+//ゼローグ∞降臨
+case 0:
+var costptn= 0;
+var tamalim= 6;
+var floor=[
+[0,1575,2,1575,2,1575,2,1575,2,1575,2,1575,2,1575,2],
+[45,11000,0,11000,1,11000,2,11000,3,11000,4,330000,0,330000,1,330000,2,330000,3,330000,4],
+[0,4276,4],
+[1,10350,0,10350,1,10350,2,10350,3,10350,4],
+[1,18900,0,18900,1,18900,2,18900,3,18900,4],
+[45,11000,0,11000,1,11000,2,11000,3,11000,4,330000,0,330000,1,330000,2,330000,3,330000,4],
+[2,700000,0,700000,1,700000,2,700000,3,700000,4],
+[3,1250,0,1250,1,1250,2,1250,3,1250,4],
+[0,650000,1,652100,4]
+];
+break;
+//ノルディス降臨
+case 1:
+var costptn= 0;
+var tamalim= 6;
+var floor=[
+[5,5600,2,5600,3],
+[3,2925,2,2925,3,3413,2,3413,3],
+[45,330000,2,330000,3,11000,2,11000,3],
+[3,19200,2,19200,3],
+[1,2848,2,2848,3],
+[0,16918,3],
+[0,700000,1,700000,4],
+[3,1250,0,1250,1,1250,2,1250,3,1250,4],
+[0,12600,2]
+];
+break;
+//ヴォルスーン降臨
+case 2:
+var costptn= 1;
+var tamalim= 6;
+var floor=[
+[45,11000,0,11000,1,11000,2,11000,3,11000,4,330000,0,330000,1,330000,2,330000,3,330000,4],
+[0,3675,0,3675,0,3675,1],
+[0,10766,1],
+[45,11000,0,11000,1,11000,2,11000,3,11000,4,330000,0,330000,1,330000,2,330000,3,330000,4],
+[0,11025,0],
+[0,7013,1],
+[0,700000,0,700000,1],
+[3,1250,0,1250,1,1250,2,1250,3,1250,4],
+[0,20477,1]
+];
+break;
+//ガイノウト降臨
+case 3:
+var costptn= 1;
+var tamalim= 5;
+var floor=[
+[45,480000,0,480000,1,480000,2,480000,3,480000,4,16000,0,16000,1,16000,2,16000,3,16000,4],
+[3,8663,0,8663,1,8663,2,8663,3,8663,4],
+[2,17438,0,17438,1,17438,2],
+[0,8780,0],
+[0,8100,2],
+[0,700000,1,700000,2],
+[3,1250,0,1250,1,1250,2,1250,3,1250,4],
+[0,11700,1]
+];
+break;
+//特殊降臨ラッシュ
+case 4:
+var costptn= 3;
+var tamalim= 5;
+var floor=[
+[0,22052,3],
+[0,27785,0],
+[0,38591,1],
+[0,44104,2],
+[0,49617,0],
+];
+break;
+}//switch
+
+//潜在たまドラ出現時の処理
+if(tamadora==0){
+}else{
+if(tamadora>tamalim){
+alert('潜在たまドラの出現位置が不正です');
+nasi();
+}//if
+floor[tamadora-1]=[0,120000,3];
+}
+
+//実経験値量計算
+for(var i =0;i<floor.length;i++){
+for(var j= 2;j<floor[i].length;j+=2){
+//同属性ボーナス
+if(floor[i][j]==mainelement){
+floor[i][j-1]=floor[i][j-1]*1.5;
+}//if
+}//for
+}//for
+//経験値取得量計算
+var maxexp=[0,0,0,0,0,0,0,0,0];
+var minexp=[0,0,0,0,0,0,0,0,0];
+for(var i = 0;i<floor.length;i++){
+maxexp[i]=floor[i][1];
+minexp[i]=floor[i][1];
+for(var j = 3;j<floor[i].length;j+=2){
+if(floor[i][0]!=0){
+if(floor[i][j]>maxexp[i]){
+maxexp[i]=floor[i][j];
+}//if
+if(floor[i][j]<minexp[i]){
+minexp[i]=floor[i][j];
+}//if
+}//if
+else{
+maxexp[i]=maxexp[i]+floor[i][j]
+minexp[i]=minexp[i]+floor[i][j]
+}//else
+}//for
+if(floor[i][0]==45){
+maxexp[i]=maxexp[i]*5;
+minexp[i]=minexp[i]*4;
+}//if
+else{
+if(floor[i][0]!=0 && floor[i][0]!=45){
+maxexp[i]=maxexp[i]*floor[i][0];
+minexp[i]=minexp[i]*floor[i][0];
+}//if
+}//else
+}//for
+//コスト補正の計算
+var cost0=[
+5.14,5,4.87,4.73,4.6,
+4.47,4.34,4.21,4.09,3.96,
+3.85,3.73,3.61,3.5,3.38,
+3.27,3.16,3.06,2.95,2.86,
+2.75,2.65,2.55,2.46,2.36,
+2.28,2.19,2.1,2.02,1.92,
+1.85,1.78,1.7,1.62,1.54,
+1.48,1.41,1.35,1.28,1.22,
+1.16,1.1,1.04,0.99,0.92,
+0.88,0.84,0.79,0.74,0.69
+];
+var cost1=[
+20.03,19.48,18.93,18.4,17.87,
+17.35,16.84,16.33,15.84,15.35,
+14.87,14.4,13.92,13.43,12.98,
+12.54,12.11,11.68,11.26,10.85,
+10.45,10.06,9.68,9.3,8.95,
+8.57,8.22,7.87,7.53,7.28,
+6.88,6.57,6.27,5.97,5.69,
+5.4,5.13,4.86,4.6,4.32,
+4.07,3.83,3.6,3.44,3.2,
+3.02,2.82,2.64,2.46,2.26,
+2.12,1.97,1.82,1.68,1.53,
+];
+var cost2=[
+40.18,39.07,37.97,36.89,35.83,
+34.78,33.75,32.73,31.73,30.75,
+29.78,28.83,27.89,26.97,26.07,
+25.18,24.31,23.45,22.61,21.79,
+20.98,20.19,19.41,18.65,17.91,
+17.18,16.47,15.77,15.09,14.43,
+13.78,13.15,12.53,11.93,11.35,
+10.78,10.23,9.69,9.17,8.67,
+8.18,7.71,7.25,6.81,6.39,
+5.98,5.59,5.21,4.85,4.51,
+4.18,3.87,3.57,3.29,3.032
+];
+var cost3=[
+104.36,101.85,99.36,96.90,94.48,
+92.08,89.71,87.37,85.06,82.78,
+80.53,78.31,76.12,73.96,71.83,
+69.72,67.65,65.61,63.59,61.61,
+59.66,57.73,55.84,53.97,52.14,
+50.33,48.55,46.81,45.09,43.40,
+41.74,40.11,38.51,36.94,35.41,
+33.95,32.50,31.08,29.69,28,23,
+27.01,25.72,24.46,23.24,21.90,
+20.88,19.75,18.66,17.60,16.57,
+15.57,14.60,13.67,12.77,11.90,
+11.07,10.27,9.50,8.76,8.00,
+7.38,6.75,6.14,5.57,5.02,
+4.52,4.04,3.60,3.19,2.81
+];
+//ゼローグorノルディス
+var expcost ;
+if(costptn == 0 ){
+if(cost > 50){
+expcost = 0.50;
+}//if
+else{
+expcost = cost0[cost-1];
+}//if
+}//else
+//ヴォルスーンorガイノウト
+if(costptn == 1 ){
+if(cost > 55){
+expcost = 1.00;
+}//if
+else{
+expcost = cost1[cost-1];
+}//if
+}//else
+//リンシア
+if(costptn == 2 ){
+if(cost > 55){
+expcost = 1.98;
+}//if
+else{
+expcost = cost2[cost-1];
+}//if
+}//else
+//特殊降臨ラッシュ
+if(costptn == 3 ){
+if(cost > 70){
+expcost = 1.62;
+}//if
+else{
+expcost = cost3[cost-1];
+}//if
+}//else
+//コスト補正適応
+for(var i=0;i<maxexp.length;i++){
+maxexp[i] =Math.round(maxexp[i]*expcost);
+minexp[i] =Math.round(minexp[i]*expcost);
+}//for
+
+//現在レベル計算用の処理
+var exp =[];
+var taiou=[10,15,20,30,35,40,50,60,80,99.9999,160,300]
+for(var i=0;i<99;i++){
+exp[i]=Math.round((((i-1)*50/49)**2.5)*taiou[explv]);
+}
+var checkF=[];
+checkF[0] = document.highorlow.F2.checked;
+checkF[1] = document.highorlow.F3.checked;
+checkF[2] = document.highorlow.F4.checked;
+checkF[3] = document.highorlow.F5.checked;
+checkF[4] = document.highorlow.F6.checked;
+checkF[5] = document.highorlow.F7.checked;
+checkF[6] = document.highorlow.F8.checked;
+checkF[7] = document.highorlow.F9.checked;
+checkF[8] = document.highorlow.F10.checked;
+var nexp=[];
+var nlevel=[];
+for(var i=0;i<floor.length;i++){
+if(i == 0){
+if(checkF[0]==true){
+nexp[0] = maxexp[0];
+}//if
+else{
+nexp[0] = minexp[0];
+}//else
+}//if
+else{
+if(checkF[i]==true){
+nexp[i] = nexp[i-1]+maxexp[i];
+}//if
+else{
+nexp[i] = nexp[i-1]+minexp[i];
+}//else
+}//else
+for(var j=0;j<100;j++){
+if(exp[j]>nexp[i]){
+break;
+}//if
+}//for
+nlevel[i]=j-1;
+}//for
+//出力処理
+for(i=0;i<=9;i++){
+var rows = elem.rows.length;
+if(rows == 1){
+break;
+}//if
+var rows = elem.deleteRow(0);
+}//for
+elem.border=1;
+var row = elem.insertRow(-1);
+var rows = elem.deleteRow(0);
+var cell0 = row.insertCell(-1);
+var cell1 = row.insertCell(-1)
+elem.rows[0].cells[0].innerText ="";
+elem.rows[0].cells[1].innerText ="レベル";
+var row = elem.insertRow(-1);
+var cell0 = row.insertCell(-1);
+var cell1 = row.insertCell(-1);
+elem.rows[1].cells[0].innerText ="1F";
+elem.rows[1].cells[1].innerText ="1";
+for(i=0;i<floor.length;i++){
+var row = elem.insertRow(-1);
+var cell0 = row.insertCell(-1);
+var cell1 = row.insertCell(-1);
+elem.rows[i+2].cells[0].innerText =i+2+"F";
+elem.rows[i+2].cells[1].innerText =nlevel[i];
+}//for
+}//function
+function Key_on(key){
+if(key==13){
+event.preventDefault();
+st();
+}//if
+}//function
+</script>
+</body>
+</html>
